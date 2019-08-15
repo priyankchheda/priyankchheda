@@ -2,32 +2,20 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/x899/useragent"
 )
 
 func main() {
-	url := "http://www.useragentstring.com/pages/useragentstring.php"
-	doc, err := useragent.GetHTMLDoc(url)
-	if err != nil {
-		log.Fatal(err)
-	}
+	browserCategories := useragent.GetBrowserCategory()
+	fmt.Println(strings.Join(browserCategories, " | "))
 
-	browserCategory := useragent.GetBrowserCategory(doc)
-	fmt.Println(browserCategory)
+	category := browserCategories[4]
+	browsers := useragent.GetBrowser(category)
+	fmt.Println(strings.Join(browsers, " | "))
 
-	browserList := useragent.GetBrowser(doc)
-	fmt.Println(strings.Join(browserList, " | "))
-
-	browser := "ABrowse"
-	url = "http://www.useragentstring.com/pages/useragentstring.php?name="
-	doc, err = useragent.GetHTMLDoc(url + browser)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(useragent.GetUserAgent(doc))
-	fmt.Println(len(useragent.GetUserAgent(doc)))
-
+	browser := browsers[0]
+	fmt.Println(useragent.GetUserAgent(browser))
+	fmt.Println(len(useragent.GetUserAgent(browser)))
 }

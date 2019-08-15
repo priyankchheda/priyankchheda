@@ -3,15 +3,19 @@ package useragent
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"golang.org/x/net/html"
 )
 
-func core(doc *html.Node, nodeParser func(*html.Node, *[]string)) []string {
+var userAgentStringURL = "http://www.useragentstring.com/pages/useragentstring.php"
+
+// tagParser parses all specified tag present in HTML
+func tagParser(doc *html.Node, tag string, nodeParser func(*html.Node, *[]string)) []string {
 	var ret []string
 	var f func(*html.Node)
 	f = func(n *html.Node) {
-		if n.Type == html.ElementNode && n.Data == "a" {
+		if n.Type == html.ElementNode && n.Data == tag {
 			nodeParser(n, &ret)
 		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
@@ -22,6 +26,7 @@ func core(doc *html.Node, nodeParser func(*html.Node, *[]string)) []string {
 	return ret
 }
 
+// GetHTMLDoc returns html parser root Node
 func GetHTMLDoc(url string) (*html.Node, error) {
 	response, err := http.Get(url)
 	if err != nil {
@@ -40,13 +45,14 @@ func GetHTMLDoc(url string) (*html.Node, error) {
 	return doc, nil
 }
 
-func text(n *html.Node) string {
+// textParser returns text of input node
+func textParser(n *html.Node) string {
 	var t string
 	if n.Type == html.TextNode {
 		t = n.Data
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		t = text(c)
+		t = textParser(c)
 	}
-	return t
+	return strings.TrimSpace(t)
 }
