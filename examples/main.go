@@ -5,7 +5,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/x899/useragent/useragent"
+	"github.com/x899/useragent"
 )
 
 func main() {
