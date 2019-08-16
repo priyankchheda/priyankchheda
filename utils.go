@@ -10,7 +10,7 @@ import (
 
 var userAgentStringURL = "http://www.useragentstring.com/pages/useragentstring.php"
 
-// tagParser parses all specified tag present in HTML
+// tagParser parses all specified tag present in HTML doc using nodeParser function
 func tagParser(doc *html.Node, tag string, nodeParser func(*html.Node, *[]string)) []string {
 	var ret []string
 	var f func(*html.Node)
@@ -26,8 +26,8 @@ func tagParser(doc *html.Node, tag string, nodeParser func(*html.Node, *[]string
 	return ret
 }
 
-// GetHTMLDoc returns html parser root Node
-func GetHTMLDoc(url string) (*html.Node, error) {
+// getHTMLDoc parse the html content from URL and returns html parser root Node
+func getHTMLDoc(url string) (*html.Node, error) {
 	response, err := http.Get(url)
 	if err != nil {
 		return nil, fmt.Errorf("unable to get url")
